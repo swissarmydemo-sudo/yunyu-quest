@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>语之境界 · 先学后闯 · 日语/韩语</title>
+<style>
+:root{--jp:#e63946;--ko:#c1121f;--gold:#f4a261;--bg:#0f1220;--card:#1b2036;--line:#2a3152;--txt:#e8eaf6;--dim:#9aa0c3;--ok:#2ec4b6;--bad:#ef476f;--accent:#5aa9e6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(1200px 700px at 20% -10%,#1d2340 0%,#0f1220 55%);color:var(--txt);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:1000px;margin:0 auto;padding:20px 16px 70px}
+h1{font-size:24px;letter-spacing:2px}
+h1 small{color:var(--dim);font-weight:400;letter-spacing:0;font-size:12px;display:block;margin-top:4px}
+.topbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.coins{background:linear-gradient(135deg,#f4a261,#e76f51);color:#1b1030;font-weight:800;padding:7px 14px;border-radius:30px;font-size:14px}
+.badge-line{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
+.badge-chip{background:var(--card);border:1px solid var(--line);padding:4px 10px;border-radius:20px;color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
+.lang-choice{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+.lang-card{cursor:pointer;border:2px solid var(--line);border-radius:16px;padding:24px;text-align:center;background:var(--card);transition:.18s}
+.lang-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+.lang-card .big{font-size:38px;font-weight:800;margin-bottom:6px}
+.lang-card .sub{color:var(--dim);font-size:13px}
+.phase-block{margin-bottom:16px}
+.phase-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.phase-title{font-size:16px;font-weight:700}
+.phase-sub{color:var(--dim);font-size:12px}
+.chain{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}
+.lv{cursor:pointer;border:2px solid var(--line);border-radius:12px;padding:12px 6px;text-align:center;background:var(--card);transition:.15s}
+.lv:hover:not(.locked){border-color:var(--accent);transform:translateY(-2px)}
+.lv.locked{opacity:.38;pointer-events:none;filter:grayscale(.6)}
+.lv.done{border-color:var(--ok);background:linear-gradient(160deg,#0e2b26,var(--card))}
+.lv.lvl-cur{border-color:var(--gold);box-shadow:0 0 12px rgba(244,162,97,.35);background:linear-gradient(160deg,#2a2410,var(--card))}
+.lv .ln{font-size:18px;font-weight:800;color:var(--accent);display:block}
+.lv.done .ln{color:var(--ok)}
+.lv .ls{font-size:10px;display:block;margin-bottom:2px}
+.lv.pending{opacity:.6}
+.qtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.qhead{font-size:16px;font-weight:700}
+.qpbar{height:7px;background:var(--line);border-radius:6px;overflow:hidden;flex:1;min-width:90px;margin:0 10px}
+.qpbar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.qscore{color:var(--gold);font-weight:700;font-size:14px}
+.prompt{font-size:24px;font-weight:700;margin:12px 0;min-height:40px;line-height:1.6}
+.prompt.jp,.prompt.ko{font-size:28px}
+.prompt .hint{font-size:15px;color:var(--dim);font-weight:400}
+.opt-grid{display:grid;gap:10px}
+.opt{border:2px solid var(--line);border-radius:12px;padding:13px;cursor:pointer;background:#151a30;font-size:16px;transition:.12s;text-align:left}
+.opt:hover{border-color:var(--accent);background:#1a2040}
+.opt.correct{border-color:var(--ok);background:#0d2b26;animation:pop .25s}
+.opt.wrong{border-color:var(--bad);background:#330f1c}
+.opt.locked{pointer-events:none}
+@keyframes pop{50%{transform:scale(1.03)}}
+.btns{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.btn{border:none;border-radius:12px;padding:12px 22px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s}
+.btn.primary{background:linear-gradient(135deg,#5aa9e6,#4361ee);color:#fff}
+.btn.gold{background:linear-gradient(135deg,#f4a261,#e76f51);color:#1b1030}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--dim)}
+.tts-btn{background:none;border:1.5px solid var(--accent);color:var(--accent);border-radius:50%;width:44px;height:44px;font-size:19px;cursor:pointer;flex:none}
+.study-item{display:flex;align-items:center;gap:12px;padding:11px 6px;border-bottom:1px dashed var(--line)}
+.study-item:last-child{border-bottom:none}
+.study-item .w{font-size:19px;font-weight:700;min-width:120px}
+.study-item .r{color:var(--accent);font-size:13px;min-width:70px}
+.study-item .m{color:var(--dim);font-size:14px;flex:1}
+.study-sec{font-size:13px;color:var(--gold);font-weight:700;margin:14px 0 4px;letter-spacing:1px}
+.reward-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.reward-card{border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;background:#141832}
+.reward-card.locked{opacity:.4}
+.reward-card .ri{font-size:28px}
+.reward-card .rn{font-weight:700;margin-top:6px}
+.reward-card .rc{font-size:12px;color:var(--gold)}
+.meter{display:flex;gap:3px;margin:6px 0 2px}
+.meter span{flex:1;height:6px;border-radius:3px}
+.stats-row{display:flex;gap:8px;color:var(--dim);font-size:13px;margin-top:8px}
+.rew-toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f4a261,#e76f51);color:#1b1030;font-weight:800;padding:13px 20px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:99;display:none;text-align:center;font-size:14px}
+.rew-toast.show{display:block;animation:drop .4s}
+@keyframes drop{from{transform:translate(-50%,-30px);opacity:0}}
+.row-between{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.nav-tab{display:flex;gap:10px;margin-bottom:16px}
+.nav-tab button{flex:1;background:var(--card);border:1px solid var(--line);color:var(--dim);border-radius:12px;padding:11px;cursor:pointer;font-weight:700;font-size:14px}
+.nav-tab button.on{background:linear-gradient(135deg,#5aa9e6,#4361ee);color:#fff;border-color:transparent}
+.hidden{display:none!important}
+.footer-note{text-align:center;color:var(--dim);font-size:11px;margin-top:22px}
+.study-note{color:var(--dim);font-size:13px;margin:10px 0 4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <h1>語之境界 <small>先学后闯 · 跟着课程一天一关</small></h1>
+    <div class="row-between" style="gap:14px">
+      <span class="coins">🪙 <span id="coinsVal">0</span></span>
+      <div class="badge-line" id="badgeLine"></div>
+    </div>
+  </div>
+  <div class="nav-tab" id="navTabs">
+    <button data-tab="home" class="on">🎮 闯关</button>
+    <button data-tab="stats">📊 进度</button>
+    <button data-tab="rewards">🏆 奖励</button>
+    <button data-tab="reset">⚙️</button>
+  </div>
+  <div id="tab-home">
+    <div id="view-lang">
+      <p style="color:var(--dim);margin-bottom:14px">选一门语言。每一关都「先学习当天课程 → 再闯关」，跟着 6 个月课程一天天推进。</p>
+      <div class="lang-choice">
+        <div class="lang-card" data-lang="ja"><div class="big" style="color:var(--jp)">日本語</div><div class="sub">日语 · 6个月课程 · 一天一关</div></div>
+        <div class="lang-card" data-lang="ko"><div class="big" style="color:var(--ko)">한국어</div><div class="sub">韩语 · 6개월 코스</div></div>
+      </div>
+    </div>
+    <div id="view-chain" class="hidden">
+      <div class="backline" style="margin-bottom:10px"><button class="btn ghost" id="backToLang">← 返回语言</button></div>
+      <div class="card" id="chainCard"></div>
+    </div>
+  </div>
+  <div id="playArea" class="hidden">
+    <div class="qtop">
+      <button class="btn ghost" id="quitBtn">← 关卡</button>
+      <div class="qhead" id="qhead"></div>
+      <span class="qscore" id="qscore"></span>
+    </div>
+    <div class="card" id="qStage"></div>
+  </div>
+  <div id="tab-stats" class="hidden"><div class="card" id="statsBody"></div></div>
+  <div id="tab-rewards" class="hidden"><div class="card" id="rewardsBody"></div></div>
+  <div id="tab-reset" class="hidden">
+    <div class="card">
+      <h2 style="margin-bottom:12px">⚙️ 数据管理</h2>
+      <p style="color:var(--dim);font-size:13px;margin-bottom:14px">进度与积分存本机（localStorage）。内容随课程逐课续载。清除不可恢复。</p>
+      <button class="btn ghost" id="resetBtn">🗑️ 重置所有进度</button>
+    </div>
+  </div>
+  <div class="footer-note">语之境界 · 内容来自你的 6 个月课程 · 每日一关</div>
+</div>
+<div class="rew-toast" id="rewToast"></div>
+<script>
+/* =================================================================
+   语之境界 v3 · 先学后闯
+   关卡 = 课程天数(≈190) / 4阶段分组
+   每关 = [学习当天课程] → [闯关] (单词/听力/句子/问答)
+   内容 = 从你的课程 day-NN 逐课生成+核对 (持续续载)
+   ================================================================= */
+
+const MAXDAY=190;
+const PHASES=[
+  {name:"文字基础",r:[1,30]},
+  {name:"场景实战",r:[31,78]},
+  {name:"日常会话",r:[79,127]},
+  {name:"自由表达",r:[128,190]}
+];
+function phaseOf(d){for(const p of PHASES)if(d>=p.r[0]&&d<=p.r[1])return p;return PHASES[0]}
+
+/* ---------- 题库(随课程持续补充; 已核对的课才进) ---------- */
+/* 每课: {words:[[词,读法?,义]...], phrases:[[文本,义]...], sent:[[句,义]...], quiz:[[题,选项,答案idx]...]} */
+const CK = {"ja":{"name":"日本語","voice":"ja-JP","days":{"1":{"words":[["あ","a","平假名 a（像『女』字少一横）"],["い","i","平假名 i（像两个『1』并列）"],["う","u","平假名 u（像字母 u 的耳朵）"],["え","e","平假名 e（像元宝倒过来）"],["お","o","平假名 o（像 o 加一笔）"],["おはようございます","ohayou gozaimasu","早上好（礼貌）"],["こんにちは","konnichiwa","你好（白天）"],["こんばんは","konbanwa","晚上好"],["はい","hai","是"],["いいえ","iie","不是"],["ありがとうございます","arigatou gozaimasu","谢谢（郑重）"]],"phrases":[["おはようございます","早上好（礼貌）"],["こんにちは","你好（白天）"],["こんばんは","晚上好"],["ありがとうございます","谢谢"],["はい / いいえ","是 / 不是"]],"sent":[["おはようございます！","早上好！"]],"quiz":[["平假名「あ」的罗马音是？",["a","i","e"],0],["「こんにちは」是？",["早上好","你好（白天）","再见"],1],["「おはようございます」用于？",["晚上","早上（礼貌寒暄）","深夜"],1],["「はい」意思是？",["是","不是","谢谢"],0],["「いいえ」意思是？",["是","不是","再见"],1],["平假名「え」读作？",["a","e","o"],1],["「ありがとうございます」是？",["对不起","谢谢","你好"],1]]}}},"ko":{"name":"한국어","voice":"ko-KR","days":{"1":{"words":[["ㅏ","a","元音 a（张大嘴啊）"],["ㅑ","ya","元音 ya"],["ㅓ","eo","元音 eo（嘴半张放松）"],["ㅕ","yeo","元音 yeo"],["ㅗ","o","元音 o（嘴收圆）"],["안녕하세요","annyeonghaseyo","你好"],["안녕히 가세요","annyeonghi gaseyo","再见（对方离开时）"],["네","ne","是"],["아니요","aniyo","不是"],["감사합니다","gamsahamnida","谢谢"],["죄송합니다","joesonghamnida","对不起"]],"phrases":[["안녕하세요","你好"],["감사합니다","谢谢"],["죄송합니다","对不起"],["안녕히 가세요","再见（对方走）"]],"sent":[["안녕하세요!","你好！"],["감사합니다.","谢谢。"]],"quiz":[["韩文「ㅏ」接近？",["a(啊)","o(欧)","u(乌)"],0],["안녕하세요 是？",["你好","谢谢","再见"],0],["네 / 아니요 是？",["是/不是","好/坏","来/去"],0],["감사합니다 是？",["对不起","谢谢","加油"],1],["「ㅗ」读作？",["u","o","eo"],1],["「ㅓ」读作？",["a","eo","o"],1]]}}}};
+
+/* ---------- 状态 ---------- */
+const SKEY="langquest_v3_course";
+function defaultState(){return{coins:0,total:0,streak:0,ja:{},ko:{}}}
+let S=load();
+function load(){try{const r=JSON.parse(localStorage.getItem(SKEY));return r&&r.total!=null?r:defaultState()}catch(e){return defaultState()}}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
+function dt(lang){return S[lang]||(S[lang]={})}
+function passed(lang,d){return !!(dt(lang)[String(d)]&&dt(lang)[String(d)].pass)}
+function passedCount(lang){let c=0;for(let d=1;d<=MAXDAY;d++)if(passed(lang,d))c++;return c}
+function playable(lang,d){if(d<1)return false;return d===1||passed(lang,d-1)}
+function hasContent(lang,d){const days=CK[lang].days;return !!(days[String(d)]&&(days[String(d)].words.length||days[String(d)].quiz.length))}
+function firstPlayable(lang){for(let d=1;d<=MAXDAY;d++){if(playable(lang,d))return d}return 1}
+
+/* ---------- DOM/工具 ---------- */
+const $=id=>document.getElementById(id);
+let VIEW={lang:"ja"};let PLAY=null;let REWARDQ=[];
+function el(t,c,h){const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function pickN(a,n){const s=shuffle(a.slice());return s.slice(0,n)}
+function speak(t,v){try{const u=new SpeechSynthesisUtterance(t);u.lang=v;u.rate=0.8;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+function toast(m,s){const t=$("rewToast");t.innerHTML=`<div>${m}</div>${s?`<div style="font-weight:400;font-size:12px;margin-top:4px">${s}</div>`:""}`;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),3300)}
+function showRewards(){if(REWARDQ.length){const[m,s]=REWARDQ.shift();toast(m,s);setTimeout(showRewards,2500)}}
+function titleName(){const T=[["语言新手",0],["語の旅人",100],["双语行者",250],["境界突破者",500],["语之大师",800]];let n=T[0][0];for(const[a,p]of T)if(S.total>=p)n=a;return n}
+function fmtCoins(){$("coinsVal").textContent=S.coins}
+function renderBadge(){let lv=passedCount("ja")+passedCount("ko");$("badgeLine").innerHTML=`<span class="badge-chip">💠 ${titleName()}</span><span class="badge-chip">共过 ${lv} 课</span><span>🔥 ${S.streak}</span>`}
+
+/* ---------- 视图 ---------- */
+function gotoLang(){$("view-lang").classList.remove("hidden");$("view-chain").classList.add("hidden")}
+function gotoChain(){$("view-lang").classList.add("hidden");$("view-chain").classList.remove("hidden");renderChain()}
+function renderChain(){
+  const lang=CK[VIEW.lang];const card=$("chainCard");card.innerHTML="";
+  card.appendChild(el("div","card",`<div class="row-between"><b>${lang.name}</b><span style="color:var(--dim);font-size:12px">共 <b>${MAXDAY}</b> 课 · 已过 ${passedCount(VIEW.lang)} 课 · 4阶段</span></div>`,0));
+  for(const p of PHASES){
+    const [s,e]=p.r;
+    const block=el("div","phase-block");
+    const doneIn=0;let dn=0;for(let d=s;d<=e;d++)if(passed(VIEW.lang,d))dn++;
+    const head=el("div","phase-head",`<span class="phase-title">${p.name}</span><span class="phase-sub">第${s}~${e}课 · ${dn}/${e-s+1}已过</span>`);block.appendChild(head);
+    const chain=el("div","chain");
+    for(let d=s;d<=e;d++){
+      const done=passed(VIEW.lang,d),play=playable(VIEW.lang,d),hc=hasContent(VIEW.lang,d);
+      const c=el("div","lv"+(done?" done":"")+(play&&!done?" lvl-cur":"")+((play&&!hc)?" pending":"")+(!play?" locked":""));
+      c.innerHTML=`<span class="ls">${done?"✔":(play?(hc?"🚩":"···"):"🔒")}</span><span class="ln">${d}</span>`;
+      if(play)c.onclick=()=>openLevel(d);
+      chain.appendChild(c);
+    }
+    block.appendChild(chain);card.appendChild(block);
+  }
+}
+function openLevel(d){
+  const lang=CK[VIEW.lang];$("tab-home").classList.add("hidden");$("playArea").classList.remove("hidden");
+  $("qhead").textContent=`${lang.name} · 第${d}课 · ${phaseOf(d).name}`;$("qscore").textContent="";
+  const st=$("qStage");st.innerHTML="";
+  if(!hasContent(VIEW.lang,d)){
+    st.appendChild(el("div","prompt","📖 本课内容续载中",0));
+    st.appendChild(el("div","study-note","这一课的题目正在按课程生成核对，先复习前面学过的，或稍后再来。"));
+    const b=el("div","btns");const bk=el("button","btn gold","返回关卡");bk.onclick=()=>{donePlay();renderChain()};b.appendChild(bk);st.appendChild(b);
+    return;
+  }
+  // —— 学习页 ——
+  const day=CK[VIEW.lang].days[String(d)];
+  st.appendChild(el("div","prompt","📖 先学习 · 本课内容",0));
+  if(day.words.length){st.appendChild(el("div","study-sec","✦ 本课单词"));day.words.forEach(w=>{const it=el("div","study-item",`<span class="w">${w[0]}</span><span class="r">${w[1]||""}</span><span class="m">${w[2]}</span>`);const tt=el("button","tts-btn","🔊");tt.onclick=()=>speak(w[0],lang.voice);it.appendChild(tt);st.appendChild(it)})}
+  if(day.phrases.length){st.appendChild(el("div","study-sec","✦ 本课短语 / 听力"));day.phrases.forEach(w=>{const it=el("div","study-item",`<span class="w">${w[0]}</span><span class="r"></span><span class="m">${w[1]}</span>`);const tt=el("button","tts-btn","🔊");tt.onclick=()=>speak(w[0],lang.voice);it.appendChild(tt);st.appendChild(it)})}
+  if(day.sent.length){st.appendChild(el("div","study-sec","✦ 本课句子"));day.sent.forEach(w=>{const it=el("div","study-item",`<span class="w">${w[0]}</span><span class="r"></span><span class="m">${w[1]}</span>`);const tt=el("button","tts-btn","🔊");tt.onclick=()=>speak(w[0],lang.voice);it.appendChild(tt);st.appendChild(it)})}
+  st.appendChild(el("div","study-note","点🔊跟读几遍，然后进入闯关考这一课 👇"));
+  const b=el("div","btns");
+  const go=el("button","btn gold","▶ 开始闯关（考本课）");go.onclick=()=>startGate(d);
+  const bk=el("button","btn ghost","返回关卡");bk.onclick=()=>{donePlay();renderChain()};
+  b.appendChild(go);b.appendChild(bk);st.appendChild(b);
+}
+/* ---------- 闯关(单词/听力/句子/问答) ---------- */
+function startGate(d){
+  const lang=CK[VIEW.lang];const day=lang.days[String(d)];
+  const items=[];
+  day.words.forEach(w=>items.push({type:"word",f:w[0],t:w[2],read:w[1]}));
+  day.phrases.forEach(w=>items.push({type:"listen",tts:w[0],t:w[1]}));
+  day.sent.forEach(w=>items.push({type:"squiz",q:w[0],t:w[1]}));
+  day.quiz.forEach(w=>items.push({type:"quiz",q:w[0],o:w[1],a:w[2]}));
+  PLAY={lang:VIEW.lang,day:d,items:shuffle(items),idx:0,right:0};
+  $("qscore").style.display="";
+  renderGateQ();
+}
+function distractorPool(lang,curWord){
+  const pool=[];const days=CK[lang].days;
+  for(const k in days){const dd=days[k];dd.words.forEach(x=>{const v=typeof curWord==="boolean"?x[2]:x[0];if(!pool.includes(v))pool.push(v)})}
+  return pool;
+}
+function renderGateQ(){
+  const lang=CK[PLAY.lang];
+  $("qscore").textContent=`${PLAY.right}✓ / ${PLAY.items.length}`;
+  const st=$("qStage");st.innerHTML="";
+  const it=PLAY.items[PLAY.idx];
+  if(it.type==="word"){
+    const wf=Math.random()<0.5;
+    st.appendChild(el("div","prompt "+(PLAY.lang==="ja"?"jp":"ko"),wf?it.f:`<span class="hint">${it.t.split(/[（(]/)[0]}</span>`));
+    if(wf)st.appendChild(el("div","hint",it.read));
+    const correct=wf?it.t:it.f;
+    const pool=distractorPool(PLAY.lang,wf).filter(x=>x!==correct);
+    const grid=el("div","opt-grid");
+    shuffle([correct,...pickN(pool,3)]).forEach(o=>{const b=el("div","opt",o);b.onclick=()=>pick(b,o===correct,it);grid.appendChild(b)});
+    st.appendChild(grid);
+  }else if(it.type==="listen"){
+    st.appendChild(el("div","prompt",'<span class="hint">🔊 点播放，选出含义</span>'));
+    const row=el("div","row-between");const tt=el("button","tts-btn","🔊");tt.onclick=()=>speak(it.tts,lang.voice);row.appendChild(tt);st.appendChild(row);
+    const pool=[];const days=CK[PLAY.lang].days;for(const k in days)days[k].phrases.forEach(x=>{if(!pool.includes(x[1]))pool.push(x[1])});
+    const grid=el("div","opt-grid");
+    shuffle([it.t,...pickN(pool.filter(x=>x!==it.t),3)]).forEach(o=>{const b=el("div","opt",o);b.onclick=()=>pick(b,o===it.t,it);grid.appendChild(b)});
+    st.appendChild(grid);
+  }else if(it.type==="squiz"){
+    st.appendChild(el("div","prompt",`看到意思，选出正确的 ${PLAY.lang==="ja"?"日语":"韩语"}说法`));
+    st.appendChild(el("div","hint",it.t));
+    const pool=[];const days=CK[PLAY.lang].days;for(const k in days)days[k].sent.forEach(x=>{if(!pool.includes(x[0]))pool.push(x[0])});
+    const grid=el("div","opt-grid");
+    shuffle([it.q,...pickN(pool.filter(x=>x!==it.q),3)]).forEach(o=>{const b=el("div","opt",o);b.onclick=()=>pick(b,o===it.q,it);grid.appendChild(b)});
+    st.appendChild(grid);
+  }else{
+    st.appendChild(el("div","prompt",it.q));
+    const grid=el("div","opt-grid");
+    it.o.forEach((o,i)=>{const b=el("div","opt",o);b.onclick=()=>pick(b,i===it.a,it);grid.appendChild(b)});
+    st.appendChild(grid);
+  }
+}
+function pick(dom,correct,it){
+  if(!PLAY)return;
+  if(correct){dom.classList.add("correct");dom.closest(".opt-grid").querySelectorAll(".opt").forEach(x=>x.classList.add("locked"));setTimeout(()=>next(true),620)}
+  else{dom.classList.add("wrong");const ans=it.type==="quiz"?it.o[it.a]:it.t;dom.closest(".opt-grid").querySelectorAll(".opt").forEach(x=>{if(!x.classList.contains("wrong")&&x.textContent===ans)x.classList.add("correct");x.classList.add("locked")});setTimeout(()=>next(false),1500)}
+}
+function next(ok){if(ok)PLAY.right++;PLAY.idx++;if(PLAY.idx>=PLAY.items.length)return finish();renderGateQ()}
+function finish(){
+  const total=PLAY.items.length,rate=PLAY.right/total;
+  const passed=rate>=0.6,earned=Math.round(18*(0.6+rate))+3;
+  const dd=dt(PLAY.lang);const cur=dd[String(PLAY.day)]||{};
+  dd[String(PLAY.day)]={pass:cur.pass||passed,score:Math.max(cur.score||0,rate)};
+  S.coins+=earned;S.total+=earned;S.streak++;save();
+  REWARDQ=[passed?[`🎉 第${PLAY.day}课通关!`,`${Math.round(rate*100)}% · +${earned}🪙`]:[`💪 未达线`,`${Math.round(rate*100)}% · +${earned}🪙`]];
+  if(passed&&PLAY.day<MAXDAY&&hasContent(PLAY.lang,PLAY.day+1))REWARDQ.push([`🔓 第${PLAY.day+1}课已解锁!`,`跟着课程继续`]);
+  const st=$("qStage");st.innerHTML="";
+  st.appendChild(el("div","prompt",passed?"🎊 过关!":"📖 再学一遍再闯",0));
+  st.appendChild(el("div","card",`<b>${Math.round(rate*100)}%</b> 正确率（需≥60%）· ✔ ${PLAY.right}/${total} · 🪙 +${earned}
+    ${passed&&PLAY.day<MAXDAY?`<div style="margin-top:8px;color:var(--dim);font-size:12px">→ 第${PLAY.day+1}课已解锁，继续</div>`:""}`,0));
+  const b=el("div","btns");
+  const r1=el("button","btn "+(passed?"ghost":"gold"),passed?"再闯一次":"重学本课");r1.onclick=()=>passed?openLevel(PLAY.day):openLevel(PLAY.day);
+  const r2=el("button","btn gold","返回关卡");r2.onclick=()=>{donePlay();renderChain()};
+  b.appendChild(r1);b.appendChild(r2);st.appendChild(b);
+  fmtCoins();renderBadge();setTimeout(showRewards,300);
+}
+function donePlay(){PLAY=null;$("playArea").classList.add("hidden");$("tab-home").classList.remove("hidden")}
+
+/* ---------- 统计/奖励 ---------- */
+function renderStats(){const body=$("statsBody");body.innerHTML="";
+  for(const l of["ja","ko"]){body.appendChild(el("h3","",CK[l].name+" · 已过 "+passedCount(l)+" 课<br>",0));
+    for(const p of PHASES){let dn=0;for(let d=p.r[0];d<=p.r[1];d++)if(passed(l,d))dn++;const row=el("div","stats-row",`${p.name}：<b>${dn}</b>/${p.r[1]-p.r[0]+1}课`,0);const m=el("div","meter");for(let d=p.r[0];d<=p.r[1];d++){const s=el("span","");s.style.background=passed(l,d)?"var(--ok)":(playable(l,d)&&!hasContent(l,d)?"var(--gold)":(playable(l,d)?"var(--accent)":"var(--line)"));m.appendChild(s)}body.appendChild(row);body.appendChild(m)}
+  }
+  body.appendChild(el("div","card",`总积分 <b>${S.total}</b> · 称号 <b>${titleName()}</b> · 连击 🔥${S.streak}<br><span style="font-size:12px;color:var(--dim)">金色=已解锁待闯 · 蓝色=有内容可闯 · 灰色=未到</span>`,0));
+}
+function renderRewards(){const body=$("rewardsBody");body.innerHTML="";
+  [["语言新兵",0,"🥉"],["語の旅人",100,"🥈"],["双语行者",250,"🥇"],["境界突破者",500,"💎"],["语之大师",800,"👑"]].forEach(([n,p,i])=>{const got=S.total>=p;const c=el("div","reward-card"+(got?"":" locked"));c.innerHTML=`<div class="ri">${i}</div><div class="rn">${n}</div><div class="rc">${got?"已达成":"需 "+p+" 积分"}</div>`;body.appendChild(c)});
+  for(const l of["ja","ko"]){body.appendChild(el("h3","",CK[l].name,0));CK[l].days&&Object.keys(CK[l].days).forEach(d=>{const dd=CK[l].days[d];const got=passed(l,+d);const c=el("div","reward-card"+(got?"":" locked"));c.innerHTML=`<div class="ri">📖</div><div class="rn">第${d}课</div><div class="rc">${got?"已通关":"未通关"}</div>`;body.appendChild(c)})}
+}
+
+/* ---------- 事件 ---------- */
+document.querySelectorAll(".lang-card").forEach(c=>c.onclick=()=>{VIEW.lang=c.dataset.lang;gotoChain()});
+$("backToLang").onclick=gotoLang;
+$("quitBtn").onclick=()=>{donePlay();renderChain()};
+document.querySelectorAll("#navTabs button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+$("resetBtn").onclick=()=>{if(confirm("确定重置所有进度？")){localStorage.removeItem(SKEY);S=defaultState();save();renderBadge();fmtCoins();gotoLang();toast("已重置")}};
+function showTab(t){document.querySelectorAll(".nav-tab button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));["home","stats","rewards","reset"].forEach(x=>$("tab-"+x).classList.toggle("hidden",x!==t));if(t==="stats")renderStats();if(t==="rewards")renderRewards()}
+function init(){fmtCoins();renderBadge();gotoLang()}
+document.addEventListener("DOMContentLoaded",init);
+</script>
+</body>
+</html>
