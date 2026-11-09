@@ -289,7 +289,7 @@ function renderGateQ(){
   const it=PLAY.items[PLAY.idx];
   if(it.type==="word"){
     const wf=Math.random()<0.5;
-    st.appendChild(el("div","prompt "+(PLAY.lang==="ja"?"jp":"ko"),wf?it.f:`<span class="hint">${it.t.split(/[（(]/)[0]}</span>`));
+    st.appendChild(el("div","prompt "+PLAY.lang,wf?it.f:`<span class="hint">${it.t.split(/[（(]/)[0]}</span>`));
     if(wf)st.appendChild(el("div","hint",it.read));
     const correct=wf?it.t:it.f;
     const pool=distractorPool(PLAY.lang,wf).filter(x=>x!==correct);
@@ -304,7 +304,7 @@ function renderGateQ(){
     shuffle([it.t,...pickN(pool.filter(x=>x!==it.t),3)]).forEach(o=>{const b=el("div","opt",o);b.onclick=()=>pick(b,o===it.t,it);grid.appendChild(b)});
     st.appendChild(grid);
   }else if(it.type==="squiz"){
-    st.appendChild(el("div","prompt",`看到意思，选出正确的 ${PLAY.lang==="ja"?"日语":"韩语"}说法`));
+    st.appendChild(el("div","prompt",`看到意思，选出正确的 ${CK[PLAY.lang].name}说法`));
     st.appendChild(el("div","hint",it.t));
     const pool=[];const days=CK[PLAY.lang].days;for(const k in days)days[k].sent.forEach(x=>{if(!pool.includes(x[0]))pool.push(x[0])});
     const grid=el("div","opt-grid");
@@ -345,14 +345,14 @@ function donePlay(){PLAY=null;$("playArea").classList.add("hidden");$("tab-home"
 
 /* ---------- 统计/奖励 ---------- */
 function renderStats(){const body=$("statsBody");body.innerHTML="";
-  for(const l of["ja","ko"]){body.appendChild(el("h3","",CK[l].name+" · 已过 "+passedCount(l)+" 课<br>",0));
+  for(const l of Object.keys(CK)){body.appendChild(el("h3","",CK[l].name+" · 已过 "+passedCount(l)+" 课<br>",0));
     for(const p of PHASES){let dn=0;for(let d=p.r[0];d<=p.r[1];d++)if(passed(l,d))dn++;const row=el("div","stats-row",`${p.name}：<b>${dn}</b>/${p.r[1]-p.r[0]+1}课`,0);const m=el("div","meter");for(let d=p.r[0];d<=p.r[1];d++){const s=el("span","");s.style.background=passed(l,d)?"var(--ok)":(playable(l,d)&&!hasContent(l,d)?"var(--gold)":(playable(l,d)?"var(--accent)":"var(--line)"));m.appendChild(s)}body.appendChild(row);body.appendChild(m)}
   }
   body.appendChild(el("div","card",`总积分 <b>${S.total}</b> · 称号 <b>${titleName()}</b> · 连击 🔥${S.streak}<br><span style="font-size:12px;color:var(--dim)">金色=已解锁待闯 · 蓝色=有内容可闯 · 灰色=未到</span>`,0));
 }
 function renderRewards(){const body=$("rewardsBody");body.innerHTML="";
   [["语言新兵",0,"🥉"],["語の旅人",100,"🥈"],["双语行者",250,"🥇"],["境界突破者",500,"💎"],["语之大师",800,"👑"]].forEach(([n,p,i])=>{const got=S.total>=p;const c=el("div","reward-card"+(got?"":" locked"));c.innerHTML=`<div class="ri">${i}</div><div class="rn">${n}</div><div class="rc">${got?"已达成":"需 "+p+" 积分"}</div>`;body.appendChild(c)});
-  for(const l of["ja","ko"]){body.appendChild(el("h3","",CK[l].name,0));CK[l].days&&Object.keys(CK[l].days).forEach(d=>{const dd=CK[l].days[d];const got=passed(l,+d);const c=el("div","reward-card"+(got?"":" locked"));c.innerHTML=`<div class="ri">📖</div><div class="rn">第${d}课</div><div class="rc">${got?"已通关":"未通关"}</div>`;body.appendChild(c)})}
+  for(const l of Object.keys(CK)){body.appendChild(el("h3","",CK[l].name,0));CK[l].days&&Object.keys(CK[l].days).forEach(d=>{const dd=CK[l].days[d];const got=passed(l,+d);const c=el("div","reward-card"+(got?"":" locked"));c.innerHTML=`<div class="ri">📖</div><div class="rn">第${d}课</div><div class="rc">${got?"已通关":"未通关"}</div>`;body.appendChild(c)})}
 }
 
 /* ---------- 事件 ---------- */
