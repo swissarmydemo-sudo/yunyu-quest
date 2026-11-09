@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>语之境界 · 先学后闯 · 日/韩/法/西语</title>
+<!-- ================================================
+     yunyu-quest · 语之境界 v2.3.0 (2026-11-10)
+     功能: 四语闯关(日/韩/法/西) · 注册登录+Supabase云端进度 · 里程碑奖励 · 艾宾浩斯记忆曲线复习
+     构建: index.template.html + build_site.py → index.html · GitHub Pages
+     ================================================ -->
 <style>
 :root{--jp:#e63946;--ko:#c1121f;--fr:#6f9a37;--es:#e07a1f;--gold:#f4a261;--bg:#0f1220;--card:#1b2036;--line:#2a3152;--txt:#e8eaf6;--dim:#9aa0c3;--ok:#2ec4b6;--bad:#ef476f;--accent:#5aa9e6}
 .modal-mask{position:fixed;inset:0;background:rgba(8,10,20,.72);display:flex;align-items:center;justify-content:center;z-index:50;padding:18px}
@@ -186,8 +191,9 @@ h1 small{opacity:.85}
   <div id="tab-reset" class="hidden">
     <div class="card">
       <h2 style="margin-bottom:12px">⚙️ 数据管理</h2>
-      <p style="color:var(--dim);font-size:13px;margin-bottom:14px">进度与积分存本机（localStorage）。内容随课程逐课续载。清除不可恢复。</p>
-      <button class="btn ghost" id="resetBtn">🗑️ 重置所有进度</button>
+      <p style="color:var(--dim);font-size:13px;margin-bottom:14px">进度与积分存本机（localStorage），登录后同步到云端。内容随课程逐课续载。清除不可恢复。</p>
+      <p style="color:var(--dim);font-size:12px">语之境界 <b>v2.3.0</b> · 注册登录 · 云端进度 · 里程碑奖励 · 记忆曲线复习</p>
+      <button class="btn ghost" id="resetBtn" style="margin-top:10px">🗑️ 重置所有进度</button>
     </div>
   </div>
   <div class="footer-note">语之境界 · 内容来自你的 6 个月课程 · 每日一关</div>
