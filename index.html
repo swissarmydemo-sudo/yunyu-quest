@@ -382,7 +382,7 @@ function fmtCoins(){$("coinsVal").textContent=S.coins}
 function renderBadge(){let lv=passedCount("ja")+passedCount("ko")+passedCount("fr")+passedCount("es");$("badgeLine").innerHTML=`<span class="badge-chip">💠 ${titleName()}</span><span class="badge-chip">共过 ${lv} 课</span><span>🔥 ${S.streak}</span>`}
 
 /* ---------- 视图 ---------- */
-function gotoLang(){$("view-lang").classList.remove("hidden");$("view-chain").classList.add("hidden");const LB={ja:"日语",ko:"韩语",fr:"法语",es:"西班牙语"};document.querySelectorAll(".lang-card").forEach(c=>{const lg=c.dataset.lang;let last=0;for(const k in CK[lg].days){const n=+k;if(n>last)last=n}const sub=c.querySelector(".sub");if(sub)sub.textContent=`${LB[lg]} · 已过 ${passedCount(lg)}/${last} 课`})
+function gotoLang(){$("view-lang").classList.remove("hidden");$("view-chain").classList.add("hidden");const LB={ja:"日语",ko:"韩语",fr:"法语",es:"西班牙语"};document.querySelectorAll(".lang-card").forEach(c=>{const lg=c.dataset.lang;let last=0;for(const k in CK[lg].days){const n=+k;if(n>last)last=n}const sub=c.querySelector(".sub");if(sub)sub.textContent=`${LB[lg]} · 已过 ${passedCount(lg)}/${last} 课`})}
 function gotoChain(){$("view-lang").classList.add("hidden");$("view-chain").classList.remove("hidden");renderChain()}
 function renderChain(){
   const lang=CK[VIEW.lang];const card=$("chainCard");card.innerHTML="";
