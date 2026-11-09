@@ -135,6 +135,10 @@ h1 small{opacity:.85}
 .study-item .w{font-size:20px}
 .tts-btn:hover{background:rgba(110,168,255,.12)}
 .modal{background:rgba(28,34,64,.85);backdrop-filter:blur(14px)}
+.lv.rv{border-style:dashed;background:rgba(64,52,96,.45)}
+.lv.rv.done{background:linear-gradient(160deg,rgba(255,194,75,.32),rgba(26,32,60,.5));border-color:var(--gold);border-style:solid}
+.lv.rvl{border-color:var(--gold);cursor:pointer;animation:rvpulse 2s infinite}
+@keyframes rvpulse{0%,100%{box-shadow:0 0 0 rgba(255,194,75,0)}50%{box-shadow:0 0 20px rgba(255,194,75,.75)}}
 </style>
 </head>
 <body>
@@ -255,6 +259,8 @@ function passedCount(lang){let c=0;for(let d=1;d<=MAXDAY;d++)if(passed(lang,d))c
 function playable(lang,d){if(d<1)return false;return d===1||passed(lang,d-1)}
 function hasContent(lang,d){const days=CK[lang].days;return !!(days[String(d)]&&(days[String(d)].words.length||days[String(d)].quiz.length))}
 function firstPlayable(lang){for(let d=1;d<=MAXDAY;d++){if(playable(lang,d))return d}return 1}
+function reviewUnlocked(lang,pr){const s=(pr-1)*10+1,e=Math.min(pr*10,MAXDAY);for(let d=s;d<=e;d++)if(!passed(lang,d))return false;return true}
+function reviewPassed(lang,pr){const g=dt(lang)["rv"+pr];return !!(g&&g.pass)}
 
 /* ---------- DOM/工具 ---------- */
 const $=id=>document.getElementById(id);
@@ -290,6 +296,21 @@ function renderChain(){
     }
     block.appendChild(chain);card.appendChild(block);
   }
+  /* —— 阶段复习大关（每 10 课一次）—— */
+  const revTot=Math.ceil(MAXDAY/10);
+  const rv=el("div","phase-block");
+  rv.appendChild(el("div","phase-head",`<span class="phase-title">🔁 阶段复习</span><span class="phase-sub">每 10 课一次综合考 · 通过率需 ≥80% · 过了领奖章 · 巩固防遗忘</span>`));
+  const rchain=el("div","chain");
+  for(let pr=1;pr<=revTot;pr++){
+    const s=(pr-1)*10+1,e=pr*10;
+    const un=reviewUnlocked(VIEW.lang,pr),done=reviewPassed(VIEW.lang,pr);
+    const c=el("div","lv rv"+(done?" done":"")+(un&&!done?" rvl":" locked"));
+    c.innerHTML=`<span class="ls">${done?"🏅":"🔁"}</span><span class="ln">${s}–${e}</span>`;
+    c.title=un&&!done?`进行复习大关 ${pr}`:done?`已通过复习大关 ${pr}`:`学完第${e}课后解锁`;
+    c.onclick=()=>{if(un&&!done)startReview(pr)};
+    rchain.appendChild(c);
+  }
+  rv.appendChild(rchain);card.appendChild(rv);
 }
 function openLevel(d){
   const lang=CK[VIEW.lang];$("tab-home").classList.add("hidden");$("playArea").classList.remove("hidden");
@@ -323,6 +344,20 @@ function startGate(d){
   day.quiz.forEach(w=>items.push({type:"quiz",q:w[0],o:w[1],a:w[2]}));
   PLAY={lang:VIEW.lang,day:d,items:shuffle(items),idx:0,right:0};
   $("qscore").style.display="";
+  renderGateQ();
+}
+/* —— 阶段复习大关（每 10 课一次综合考，通过率 ≥80% 领奖章）—— */
+function startReview(pr){
+  const lang=CK[VIEW.lang];$("tab-home").classList.add("hidden");$("playArea").classList.remove("hidden");
+  $("qhead").textContent=`${lang.name} · 复习大关 ${pr}（第${(pr-1)*10+1}~${pr*10}课）`;$("qscore").style.display="";
+  const items=[];
+  for(let d=(pr-1)*10+1;d<=Math.min(pr*10,MAXDAY);d++){const day=lang.days[String(d)];if(!day)continue;
+    day.words.forEach(w=>items.push({type:"word",f:w[0],t:w[2],read:w[1]}));
+    day.phrases.forEach(w=>items.push({type:"listen",tts:w[0],t:w[1]}));
+    day.sent.forEach(w=>items.push({type:"squiz",q:w[0],t:w[1]}));
+    day.quiz.forEach(w=>items.push({type:"quiz",q:w[0],o:w[1],a:w[2]}));}
+  PLAY={lang:VIEW.lang,review:pr,items:shuffle(pickN(items||[],12)),idx:0,right:0};
+  $("qscore").textContent=`0✓ / ${PLAY.items.length}`;
   renderGateQ();
 }
 function distractorPool(lang,curWord){
@@ -372,6 +407,7 @@ function pick(dom,correct,it){
 }
 function next(ok){if(ok)PLAY.right++;PLAY.idx++;if(PLAY.idx>=PLAY.items.length)return finish();renderGateQ()}
 function finish(){
+  if(PLAY.review)return finishReview();
   const total=PLAY.items.length,rate=PLAY.right/total;
   const passed=rate>=0.6,earned=Math.round(18*(0.6+rate))+3;
   const dd=dt(PLAY.lang);const cur=dd[String(PLAY.day)]||{};
@@ -389,6 +425,24 @@ function finish(){
   b.appendChild(r1);b.appendChild(r2);st.appendChild(b);
   fmtCoins();renderBadge();setTimeout(showRewards,300);
 }
+function finishReview(){
+  const total=PLAY.items.length,rate=PLAY.right/total;
+  const lang=PLAY.lang,ph=PLAY.review,passed=rate>=0.8;
+  const g=dt(lang);const got=g["rv"+ph]||{};const hadPass=!!got.pass;
+  got.pass=got.pass||passed;got.score=Math.max(got.score||0,rate);g["rv"+ph]=got;
+  const earn=passed?(hadPass?20:80):8;
+  S.coins+=earn;S.total+=earn;save();
+  REWARDQ=[passed?[`🏅 复习大关${ph}通过!`,`${Math.round(rate*100)}% · +${earn}🪙`]:[`📚 有遗忘，再复习`,`${Math.round(rate*100)}% · 需≥80% · +${earn}🪙`]];
+  const st=$("qStage");st.innerHTML="";
+  st.appendChild(el("div","prompt",passed?"🏅 阶段复习通过!":"📖 有遗忘，再复习一轮",0));
+  st.appendChild(el("div","card",`复习大关 ${ph}（第${(ph-1)*10+1}~${ph*10}课）· <b>${Math.round(rate*100)}%</b>（需≥80%）· ✔ ${PLAY.right}/${total}
+    ${passed?`<div style="margin-top:8px;color:var(--dim);font-size:12px">本阶段已巩固 · +${earn}🪙</div>`:`<div style="margin-top:8px;color:var(--dim);font-size:12px">错题已记，重测一两轮就能巩固</div>`}`,0));
+  const b=el("div","btns");
+  const r1=el("button","btn "+(passed?"ghost":"gold"),passed?"再测一轮":"重测一轮");r1.onclick=()=>startReview(ph);
+  const r2=el("button","btn gold","返回关卡");r2.onclick=()=>{donePlay();renderChain()};
+  b.appendChild(r1);b.appendChild(r2);st.appendChild(b);
+  fmtCoins();renderBadge();setTimeout(showRewards,300);
+}
 function donePlay(){PLAY=null;$("playArea").classList.add("hidden");$("tab-home").classList.remove("hidden")}
 
 /* ---------- 统计/奖励 ---------- */
@@ -396,7 +450,8 @@ function renderStats(){const body=$("statsBody");body.innerHTML="";
   for(const l of Object.keys(CK)){body.appendChild(el("h3","",CK[l].name+" · 已过 "+passedCount(l)+" 课<br>",0));
     for(const p of PHASES){let dn=0;for(let d=p.r[0];d<=p.r[1];d++)if(passed(l,d))dn++;const row=el("div","stats-row",`${p.name}：<b>${dn}</b>/${p.r[1]-p.r[0]+1}课`,0);const m=el("div","meter");for(let d=p.r[0];d<=p.r[1];d++){const s=el("span","");s.style.background=passed(l,d)?"var(--ok)":(playable(l,d)&&!hasContent(l,d)?"var(--gold)":(playable(l,d)?"var(--accent)":"var(--line)"));m.appendChild(s)}body.appendChild(row);body.appendChild(m)}
   }
-  body.appendChild(el("div","card",`总积分 <b>${S.total}</b> · 称号 <b>${titleName()}</b> · 连击 🔥${S.streak}<br><span style="font-size:12px;color:var(--dim)">金色=已解锁待闯 · 蓝色=有内容可闯 · 灰色=未到</span>`,0));
+  let rvc=0;for(const l of Object.keys(CK)){for(let pr=1;pr<=Math.ceil(MAXDAY/10);pr++)if(reviewPassed(l,pr))rvc++}
+  body.appendChild(el("div","card",`总积分 <b>${S.total}</b> · 称号 <b>${titleName()}</b> · 连击 🔥${S.streak} · 复习大关 🏅${rvc} 次<br><span style="font-size:12px;color:var(--dim)">金色=已解锁待闯 · 蓝色=有内容可闯 · 灰色=未到</span>`,0));
 }
 function renderRewards(){const body=$("rewardsBody");body.innerHTML="";
   [["语言新兵",0,"🥉"],["語の旅人",100,"🥈"],["双语行者",250,"🥇"],["境界突破者",500,"💎"],["语之大师",800,"👑"]].forEach(([n,p,i])=>{const got=S.total>=p;const c=el("div","reward-card"+(got?"":" locked"));c.innerHTML=`<div class="ri">${i}</div><div class="rn">${n}</div><div class="rc">${got?"已达成":"需 "+p+" 积分"}</div>`;body.appendChild(c)});
