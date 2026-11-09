@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>语之境界 · 先学后闯 · 日语/韩语</title>
 <style>
-:root{--jp:#e63946;--ko:#c1121f;--gold:#f4a261;--bg:#0f1220;--card:#1b2036;--line:#2a3152;--txt:#e8eaf6;--dim:#9aa0c3;--ok:#2ec4b6;--bad:#ef476f;--accent:#5aa9e6}
+:root{--jp:#e63946;--ko:#c1121f;--fr:#6f9a37;--gold:#f4a261;--bg:#0f1220;--card:#1b2036;--line:#2a3152;--txt:#e8eaf6;--dim:#9aa0c3;--ok:#2ec4b6;--bad:#ef476f;--accent:#5aa9e6}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:radial-gradient(1200px 700px at 20% -10%,#1d2340 0%,#0f1220 55%);color:var(--txt);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
 .wrap{max-width:1000px;margin:0 auto;padding:20px 16px 70px}
@@ -16,7 +16,7 @@ h1 small{color:var(--dim);font-weight:400;letter-spacing:0;font-size:12px;displa
 .badge-line{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--dim)}
 .badge-chip{background:var(--card);border:1px solid var(--line);padding:4px 10px;border-radius:20px;color:var(--accent)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
-.lang-choice{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+.lang-choice{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
 .lang-card{cursor:pointer;border:2px solid var(--line);border-radius:16px;padding:24px;text-align:center;background:var(--card);transition:.18s}
 .lang-card:hover{transform:translateY(-3px);border-color:var(--accent)}
 .lang-card .big{font-size:38px;font-weight:800;margin-bottom:6px}
@@ -41,7 +41,7 @@ h1 small{color:var(--dim);font-weight:400;letter-spacing:0;font-size:12px;displa
 .qpbar i{display:block;height:100%;background:var(--accent);transition:width .3s}
 .qscore{color:var(--gold);font-weight:700;font-size:14px}
 .prompt{font-size:24px;font-weight:700;margin:12px 0;min-height:40px;line-height:1.6}
-.prompt.jp,.prompt.ko{font-size:28px}
+.prompt.jp,.prompt.ko,.prompt.fr{font-size:28px}
 .prompt .hint{font-size:15px;color:var(--dim);font-weight:400}
 .opt-grid{display:grid;gap:10px}
 .opt{border:2px solid var(--line);border-radius:12px;padding:13px;cursor:pointer;background:#151a30;font-size:16px;transition:.12s;text-align:left}
@@ -104,6 +104,7 @@ h1 small{color:var(--dim);font-weight:400;letter-spacing:0;font-size:12px;displa
       <div class="lang-choice">
         <div class="lang-card" data-lang="ja"><div class="big" style="color:var(--jp)">日本語</div><div class="sub">日语 · 6个月课程 · 一天一关</div></div>
         <div class="lang-card" data-lang="ko"><div class="big" style="color:var(--ko)">한국어</div><div class="sub">韩语 · 6개월 코스</div></div>
+        <div class="lang-card" data-lang="fr"><div class="big" style="color:var(--fr)">Français</div><div class="sub">法语 · 6个月课程 · 一天一关</div></div>
       </div>
     </div>
     <div id="view-chain" class="hidden">
@@ -150,11 +151,11 @@ function phaseOf(d){for(const p of PHASES)if(d>=p.r[0]&&d<=p.r[1])return p;retur
 
 /* ---------- 题库(随课程持续补充; 已核对的课才进) ---------- */
 /* 每课: {words:[[词,读法?,义]...], phrases:[[文本,义]...], sent:[[句,义]...], quiz:[[题,选项,答案idx]...]} */
-const CK = {"ja":{"name":"日本語","voice":"ja-JP","days":{"1":{"words":[["あ","a","平假名 a（像『女』字少一横）"],["い","i","平假名 i（像两个『1』并列）"],["う","u","平假名 u（像字母 u 的耳朵）"],["え","e","平假名 e（像元宝倒过来）"],["お","o","平假名 o（像 o 加一笔）"],["おはようございます","ohayou gozaimasu","早上好（礼貌）"],["こんにちは","konnichiwa","你好（白天）"],["こんばんは","konbanwa","晚上好"],["はい","hai","是"],["いいえ","iie","不是"],["ありがとうございます","arigatou gozaimasu","谢谢（郑重）"]],"phrases":[["おはようございます","早上好（礼貌）"],["こんにちは","你好（白天）"],["こんばんは","晚上好"],["ありがとうございます","谢谢"],["はい / いいえ","是 / 不是"]],"sent":[["おはようございます！","早上好！"]],"quiz":[["平假名「あ」的罗马音是？",["a","i","e"],0],["「こんにちは」是？",["早上好","你好（白天）","再见"],1],["「おはようございます」用于？",["晚上","早上（礼貌寒暄）","深夜"],1],["「はい」意思是？",["是","不是","谢谢"],0],["「いいえ」意思是？",["是","不是","再见"],1],["平假名「え」读作？",["a","e","o"],1],["「ありがとうございます」是？",["对不起","谢谢","你好"],1]]}}},"ko":{"name":"한국어","voice":"ko-KR","days":{"1":{"words":[["ㅏ","a","元音 a（张大嘴啊）"],["ㅑ","ya","元音 ya"],["ㅓ","eo","元音 eo（嘴半张放松）"],["ㅕ","yeo","元音 yeo"],["ㅗ","o","元音 o（嘴收圆）"],["안녕하세요","annyeonghaseyo","你好"],["안녕히 가세요","annyeonghi gaseyo","再见（对方离开时）"],["네","ne","是"],["아니요","aniyo","不是"],["감사합니다","gamsahamnida","谢谢"],["죄송합니다","joesonghamnida","对不起"]],"phrases":[["안녕하세요","你好"],["감사합니다","谢谢"],["죄송합니다","对不起"],["안녕히 가세요","再见（对方走）"]],"sent":[["안녕하세요!","你好！"],["감사합니다.","谢谢。"]],"quiz":[["韩文「ㅏ」接近？",["a(啊)","o(欧)","u(乌)"],0],["안녕하세요 是？",["你好","谢谢","再见"],0],["네 / 아니요 是？",["是/不是","好/坏","来/去"],0],["감사합니다 是？",["对不起","谢谢","加油"],1],["「ㅗ」读作？",["u","o","eo"],1],["「ㅓ」读作？",["a","eo","o"],1]]}}}};
+const CK = {"ja":{"name":"日本語","voice":"ja-JP","days":{"1":{"words":[["あ","a","平假名 a（像『女』字少一横）"],["い","i","平假名 i（像两个『1』并列）"],["う","u","平假名 u（像字母 u 的耳朵）"],["え","e","平假名 e（像元宝倒过来）"],["お","o","平假名 o（像 o 加一笔）"],["おはようございます","ohayou gozaimasu","早上好（礼貌）"],["こんにちは","konnichiwa","你好（白天）"],["こんばんは","konbanwa","晚上好"],["はい","hai","是"],["いいえ","iie","不是"],["ありがとうございます","arigatou gozaimasu","谢谢（郑重）"]],"phrases":[["おはようございます","早上好（礼貌）"],["こんにちは","你好（白天）"],["こんばんは","晚上好"],["ありがとうございます","谢谢"],["はい / いいえ","是 / 不是"]],"sent":[["おはようございます！","早上好！"]],"quiz":[["平假名「あ」的罗马音是？",["a","i","e"],0],["「こんにちは」是？",["早上好","你好（白天）","再见"],1],["「おはようございます」用于？",["晚上","早上（礼貌寒暄）","深夜"],1],["「はい」意思是？",["是","不是","谢谢"],0],["「いいえ」意思是？",["是","不是","再见"],1],["平假名「え」读作？",["a","e","o"],1],["「ありがとうございます」是？",["对不起","谢谢","你好"],1]]}}},"ko":{"name":"한국어","voice":"ko-KR","days":{"1":{"words":[["ㅏ","a","元音 a（张大嘴啊）"],["ㅑ","ya","元音 ya"],["ㅓ","eo","元音 eo（嘴半张放松）"],["ㅕ","yeo","元音 yeo"],["ㅗ","o","元音 o（嘴收圆）"],["안녕하세요","annyeonghaseyo","你好"],["안녕히 가세요","annyeonghi gaseyo","再见（对方离开时）"],["네","ne","是"],["아니요","aniyo","不是"],["감사합니다","gamsahamnida","谢谢"],["죄송합니다","joesonghamnida","对不起"]],"phrases":[["안녕하세요","你好"],["감사합니다","谢谢"],["죄송합니다","对不起"],["안녕히 가세요","再见（对方走）"]],"sent":[["안녕하세요!","你好！"],["감사합니다.","谢谢。"]],"quiz":[["韩文「ㅏ」接近？",["a(啊)","o(欧)","u(乌)"],0],["안녕하세요 是？",["你好","谢谢","再见"],0],["네 / 아니요 是？",["是/不是","好/坏","来/去"],0],["감사합니다 是？",["对不起","谢谢","加油"],1],["「ㅗ」读作？",["u","o","eo"],1],["「ㅓ」读作？",["a","eo","o"],1]]}}},"fr":{"name":"Français","voice":"fr-FR","days":{"1":{"words":[["Bonjour","bɔ̃ʒuʁ","你好/日安（白天问好）"],["Salut","saly","嗨（非正式）"],["Bonsoir","bɔ̃swaʁ","晚上好"],["Merci","mɛʁsi","谢谢"],["Oui","wi","是"],["Non","nɔ̃","不是"],["Au revoir","o ʁəvwaʁ","再见"],["S'il vous plaît","sil vu plɛ","请"],["Pardon","paʁdɔ̃","对不起/打扰了"],["Ça va","sa va","你好吗/还行"]],"phrases":[["Bonjour !","你好！"],["Merci beaucoup !","非常感谢！"],["Au revoir !","再见！"],["Oui / Non","是 / 不是"],["Ça va bien, merci.","我很好，谢谢。"]],"sent":[["Bonjour, comment ça va ?","你好，你怎么样？"]],"quiz":[["「Bonjour」的意思是？",["你好","再见","谢谢"],0],["「Merci」是？",["谢谢","对不起","请"],0],["「Oui」是？",["是","不是","你好"],0],["「Non」是？",["是","不是","再见"],1],["「Au revoir」是？",["再见","晚上好","谢谢"],0],["「Bonsoir」用于什么时候？",["清晨","下午","晚上"],2],["「S'il vous plaît」是？",["请","谢谢","对不起"],0]]}}}};
 
 /* ---------- 状态 ---------- */
 const SKEY="langquest_v3_course";
-function defaultState(){return{coins:0,total:0,streak:0,ja:{},ko:{}}}
+function defaultState(){return{coins:0,total:0,streak:0,ja:{},ko:{},fr:{}}}
 let S=load();
 function load(){try{const r=JSON.parse(localStorage.getItem(SKEY));return r&&r.total!=null?r:defaultState()}catch(e){return defaultState()}}
 function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
@@ -176,7 +177,7 @@ function toast(m,s){const t=$("rewToast");t.innerHTML=`<div>${m}</div>${s?`<div 
 function showRewards(){if(REWARDQ.length){const[m,s]=REWARDQ.shift();toast(m,s);setTimeout(showRewards,2500)}}
 function titleName(){const T=[["语言新手",0],["語の旅人",100],["双语行者",250],["境界突破者",500],["语之大师",800]];let n=T[0][0];for(const[a,p]of T)if(S.total>=p)n=a;return n}
 function fmtCoins(){$("coinsVal").textContent=S.coins}
-function renderBadge(){let lv=passedCount("ja")+passedCount("ko");$("badgeLine").innerHTML=`<span class="badge-chip">💠 ${titleName()}</span><span class="badge-chip">共过 ${lv} 课</span><span>🔥 ${S.streak}</span>`}
+function renderBadge(){let lv=passedCount("ja")+passedCount("ko")+passedCount("fr");$("badgeLine").innerHTML=`<span class="badge-chip">💠 ${titleName()}</span><span class="badge-chip">共过 ${lv} 课</span><span>🔥 ${S.streak}</span>`}
 
 /* ---------- 视图 ---------- */
 function gotoLang(){$("view-lang").classList.remove("hidden");$("view-chain").classList.add("hidden")}
