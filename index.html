@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>语之境界 · 先学后闯 · 日/韩/法/西语</title>
 <!-- ================================================
-     yunyu-quest · 语之境界 v2.4.0 (2026-11-10)
+     yunyu-quest · 语之境界 v2.4.1 (2026-11-10)
      功能: 四语闯关(日/韩/法/西) · 注册登录+Supabase云端进度 · 里程碑奖励 · 艾宾浩斯记忆曲线复习
            · 错题本(攻克错题) · 生词本(收藏/导出) · 发音跟读评分 · 打卡热力日历 · 学习周报 · PWA可安装
      构建: index.template.html + build_site.py → index.html · GitHub Pages
@@ -155,6 +155,11 @@ h1 small{opacity:.85}
 .tts-btn.mic.rec{animation:rvpulse 1s infinite;color:var(--bad)}
 .tts-btn.star{color:var(--dim)}
 .tts-btn.star.on{color:var(--gold)}
+.vlog{margin:10px 0 2px;padding-left:14px;border-left:2px solid var(--line)}
+.vrow{display:flex;gap:8px;margin:12px 0;align-items:flex-start}
+.vbadge{flex:none;font-size:11px;font-weight:700;color:var(--gold);border:1px solid rgba(255,194,75,.4);border-radius:8px;padding:2px 7px;background:rgba(255,194,75,.08);min-width:44px;text-align:center}
+.vdate{flex:none;font-size:11px;color:var(--dim);padding-top:3px;width:34px}
+.vtxt{font-size:12.5px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -203,9 +208,24 @@ h1 small{opacity:.85}
   <div id="tab-reset" class="hidden">
     <div class="card">
       <h2 style="margin-bottom:12px">⚙️ 数据管理</h2>
-      <p style="color:var(--dim);font-size:13px;margin-bottom:14px">进度与积分存本机（localStorage），登录后同步到云端。内容随课程逐课续载。清除不可恢复。</p>
-      <p style="color:var(--dim);font-size:12px">语之境界 <b>v2.4.0</b> · 注册登录 · 云端进度 · 记忆曲线复习 · 错题本 · 生词本 · 发音跟读 · 打卡日历 · PWA可安装</p>
+      <p style="color:var(--dim);font-size:13px;margin-bottom:10px">进度与积分存本机（localStorage），登录后同步到云端。内容随课程逐课续载。清除不可恢复。</p>
+      <p id="syncStat" style="color:var(--dim);font-size:12px;margin-bottom:6px">☁️ 云端同步：未登录（数据存本机）</p>
+      <p style="color:var(--dim);font-size:12px">语之境界 <b>v2.4.1</b> · 注册登录 · 云端进度 · 记忆曲线复习 · 错题本 · 生词本 · 发音跟读 · 打卡日历 · PWA可安装</p>
       <button class="btn ghost" id="resetBtn" style="margin-top:10px">🗑️ 重置所有进度</button>
+    </div>
+    <div class="card">
+      <h2 style="margin-bottom:4px">📜 版本历史</h2>
+      <div class="vlog">
+        <div class="vrow"><div class="vbadge">v2.4.1</div><div class="vdate">11-10</div><div class="vtxt"><b>云同步增强</b><br>错题本/生词本/复习计划跨设备记录级合并 · 答错即时上云 · 同步状态可见 · 版本历史时间线</div></div>
+        <div class="vrow"><div class="vbadge">v2.4.0</div><div class="vdate">11-10</div><div class="vtxt"><b>六大功能 + 课程补全</b><br>错题本（连对2次移出）· 生词本 · 发音跟读评分 · 打卡热力日历 · 学习周报 · PWA可安装<br>日/韩课程 1课 → 131课（真实课程全量转换）</div></div>
+        <div class="vrow"><div class="vbadge">v2.3.0</div><div class="vdate">11-10</div><div class="vtxt"><b>版本信息</b><br>页面版本注释 · ⚙️ 版本显示</div></div>
+        <div class="vrow"><div class="vbadge">v2.0</div><div class="vdate">11-09</div><div class="vtxt"><b>记忆曲线复习</b><br>艾宾浩斯 1/3/7/15/30 天间隔 · 5 阶后永久巩固 · 「今日复习」入口</div></div>
+        <div class="vrow"><div class="vbadge">v1.4</div><div class="vdate">11-09</div><div class="vtxt"><b>视觉升级</b><br>玻璃拟态 · 多层渐变光晕 · 光影层次</div></div>
+        <div class="vrow"><div class="vbadge">v1.3</div><div class="vdate">11-09</div><div class="vtxt"><b>里程碑奖励</b><br>每 10 课一枚奖章 · 四语言统一</div></div>
+        <div class="vrow"><div class="vbadge">v1.2</div><div class="vdate">11-09</div><div class="vtxt"><b>同步修复</b><br>登录合并逻辑修复</div></div>
+        <div class="vrow"><div class="vbadge">v1.1</div><div class="vdate">11-09</div><div class="vtxt"><b>账号系统</b><br>注册登录 · Supabase 云端进度 · 多设备同步</div></div>
+        <div class="vrow"><div class="vbadge">v1.0</div><div class="vdate">11-08</div><div class="vtxt"><b>初版上线</b><br>四语言闯关（日/韩/法/西）· 关卡锁链 · 积分金币 · 语音朗读</div></div>
+      </div>
     </div>
   </div>
   <div class="footer-note">语之境界 · 内容来自你的 6 个月课程 · 每日一关</div>
@@ -257,11 +277,15 @@ function saveLocal(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}
 /* ===== Supabase 账号 + 云端进度(每人独立) ===== */
 const SB_URL="https://ridzzptbvirtpunltucb.supabase.co";
 const SB_ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpZHp6cHRidmlydHB1bmx0dWNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyMzQyNzAsImV4cCI6MjEwOTgxMDI3MH0.QF6IeeRRG4K5WlYh-Lj1X5YyMFg6vQyIK7Mrtimpnu4";
-let DB=null,DBUSER=null,cloudTimer=0;
+let DB=null,DBUSER=null,cloudTimer=0,lastSyncAt=0;
 function initClient(){try{if(window.supabase)DB=supabase.createClient(SB_URL,SB_ANON)}catch(e){DB=null}}
-function cloudSave(){if(!(DBUSER&&DB))return;clearTimeout(cloudTimer);cloudTimer=setTimeout(async()=>{try{const row={id:DBUSER.id,data:JSON.parse(JSON.stringify(S)),updated_at:new Date().toISOString()};await DB.from("progress").upsert(row,{onConflict:"id"})}catch(e){}},400)}
-function mergeStates(loc,cld){const r=defaultState();r.coins=(cld&&cld.coins!=null)?cld.coins:(loc?loc.coins||0:0);r.total=(cld&&cld.total!=null)?cld.total:(loc?loc.total||0:0);r.streak=(cld&&cld.streak!=null)?cld.streak:(loc?loc.streak||0:0);["ja","ko","fr","es"].forEach(l=>{r[l]=Object.assign({},(loc&&loc[l])||{},(cld&&cld[l])||{})});["wrong","star","cal","hist"].forEach(k=>{r[k]=Object.assign({},(loc&&loc[k])||{},(cld&&cld[k])||{})});return r}
-async function applySession(ses){const u=ses&&ses.user;if(u){DBUSER=u;const el=$("acctBtn");if(el)el.textContent="👤 "+(u.email||u.id.slice(0,6));let cloud=null;if(DB){try{const{data}=await DB.from("progress").select("data").eq("id",u.id).maybeSingle();cloud=data&&data.data}catch(e){}}S=mergeStates(S,cloud);renderBadge();fmtCoins();}else{DBUSER=null;const el=$("acctBtn");if(el)el.textContent="🔐 登 录";}}
+function updSyncStat(){const e=$("syncStat");if(!e)return;e.innerHTML=DBUSER?("☁️ 云端同步：已登录 ✓ "+(lastSyncAt?("上次同步 "+new Date(lastSyncAt).toLocaleTimeString("zh-CN",{hour12:false})):"待同步")+"（进度/错题/生词/打卡 全部随账号）"):"☁️ 云端同步：未登录（数据存本机，登录后自动上云）"}
+function cloudSave(){if(!(DBUSER&&DB))return;clearTimeout(cloudTimer);cloudTimer=setTimeout(async()=>{try{const row={id:DBUSER.id,data:JSON.parse(JSON.stringify(S)),updated_at:new Date().toISOString()};await DB.from("progress").upsert(row,{onConflict:"id"});lastSyncAt=Date.now();updSyncStat()}catch(e){}},400)}
+function mergeStates(loc,cld){const r=defaultState();r.coins=(cld&&cld.coins!=null)?cld.coins:(loc?loc.coins||0:0);r.total=(cld&&cld.total!=null)?cld.total:(loc?loc.total||0:0);r.streak=(cld&&cld.streak!=null)?cld.streak:(loc?loc.streak||0:0);
+["ja","ko","fr","es"].forEach(l=>{const a=(loc&&loc[l])||{},b=(cld&&cld[l])||{};const m=Object.assign({},a,b);if(a.rev||b.rev){const ra=a.rev||{},rb=b.rev||{},rv={};Object.keys(ra).concat(Object.keys(rb)).forEach(k=>{const x=ra[k],y=rb[k];if(!x)rv[k]=y;else if(!y)rv[k]=x;else rv[k]=((y.mastered&&!x.mastered)||y.st>x.st||(y.st===x.st&&y.due>x.due))?y:x});m.rev=rv}r[l]=m});
+["cal","hist"].forEach(k=>{r[k]=Object.assign({},(loc&&loc[k])||{},(cld&&cld[k])||{})});
+["wrong","star"].forEach(k=>{const a=(loc&&loc[k])||{},b=(cld&&cld[k])||{},m={};Object.keys(a).concat(Object.keys(b)).forEach(lg=>{const x=a[lg]||{},y=b[lg]||{},mm={};Object.keys(x).concat(Object.keys(y)).forEach(kk=>{const p=x[kk],q=y[kk];if(!p)mm[kk]=q;else if(!q)mm[kk]=p;else mm[kk]=((q.ts||0)>=(p.ts||0))?q:p});m[lg]=mm});r[k]=m});return r}
+async function applySession(ses){const u=ses&&ses.user;if(u){DBUSER=u;const el=$("acctBtn");if(el)el.textContent="👤 "+(u.email||u.id.slice(0,6));let cloud=null;if(DB){try{const{data}=await DB.from("progress").select("data").eq("id",u.id).maybeSingle();cloud=data&&data.data}catch(e){}}S=mergeStates(S,cloud);renderBadge();fmtCoins();updSyncStat()}else{DBUSER=null;const el=$("acctBtn");if(el)el.textContent="🔐 登 录";updSyncStat()}}
 function openAuth(){$("authMsg").textContent="";$("authModal").classList.remove("hidden")}
 function closeAuth(){$("authModal").classList.add("hidden")}
 async function doLogout(){try{await DB.auth.signOut()}catch(e){}DBUSER=null;const el=$("acctBtn");if(el)el.textContent="🔐 登 录";$("authModal").classList.add("hidden");toast("已退出登录","进度仍在云端")}
@@ -289,8 +313,8 @@ function todayKey(){const d=new Date();return d.getFullYear()+"-"+String(d.getMo
 function bumpHist(k,v){const t=todayKey();const h=S.hist||(S.hist={});const c=h[t]||(h[t]={l:0,r:0,c:0,a:0,ok:0});c[k]=(c[k]||0)+v;const ks=Object.keys(h);if(ks.length>90)ks.sort().slice(0,ks.length-90).forEach(x=>delete h[x])}
 function bumpCal(){const t=todayKey();S.cal||(S.cal={});S.cal[t]=(S.cal[t]||0)+1}
 function wrongKeyOf(it){return String(it.f||it.q||it.tts||it.t||"")}
-function addWrong(it){if(!it)return;const w=S.wrong||(S.wrong={});const L=w[PLAY.lang]||(w[PLAY.lang]={});const k=wrongKeyOf(it);const rec=L[k];if(rec){rec.n++;rec.ok=0;rec.ts=Date.now()}else{const ks=Object.keys(L);if(ks.length>=150){ks.sort((a,b)=>(L[a].ts||0)-(L[b].ts||0)).slice(0,ks.length-149).forEach(x=>delete L[x])}L[k]={it:{type:it.type,f:it.f,t:it.t,read:it.read,tts:it.tts,q:it.q,o:it.o,a:it.a,src:it.src},n:1,ok:0,ts:Date.now()}}}
-function wrongCorrect(it){const w=S.wrong||{};const L=w[PLAY.lang];if(!L)return;const k=wrongKeyOf(it);const rec=L[k];if(!rec)return;rec.ok=(rec.ok||0)+1;if(rec.ok>=2){delete L[k];if(PLAY)PLAY._cleared=(PLAY._cleared||0)+1}}
+function addWrong(it){if(!it)return;const w=S.wrong||(S.wrong={});const L=w[PLAY.lang]||(w[PLAY.lang]={});const k=wrongKeyOf(it);const rec=L[k];if(rec){rec.n++;rec.ok=0;rec.ts=Date.now()}else{const ks=Object.keys(L);if(ks.length>=150){ks.sort((a,b)=>(L[a].ts||0)-(L[b].ts||0)).slice(0,ks.length-149).forEach(x=>delete L[x])}L[k]={it:{type:it.type,f:it.f,t:it.t,read:it.read,tts:it.tts,q:it.q,o:it.o,a:it.a,src:it.src},n:1,ok:0,ts:Date.now()}};save()}
+function wrongCorrect(it){const w=S.wrong||{};const L=w[PLAY.lang];if(!L)return;const k=wrongKeyOf(it);const rec=L[k];if(!rec)return;rec.ok=(rec.ok||0)+1;if(rec.ok>=2){delete L[k];if(PLAY)PLAY._cleared=(PLAY._cleared||0)+1}save()}
 function toggleStar(lang,text,read,mean){const st=S.star||(S.star={});const L=st[lang]||(st[lang]={});const k=String(text);if(L[k])delete L[k];else L[k]={f:text,read:read||"",t:mean||"",ts:Date.now()};save()}
 function isStarred(lang,text){const L=(S.star||{})[lang];return !!(L&&L[String(text)])}
 function weekStats(ago){const h=S.hist||{};const r={l:0,r:0,c:0,a:0,ok:0};const now=new Date();now.setHours(0,0,0,0);for(let i=0;i<7;i++){const d=new Date(now);d.setDate(now.getDate()-i-ago*7);const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");const c=h[k];if(c){r.l+=c.l||0;r.r+=c.r||0;r.c+=c.c||0;r.a+=c.a||0;r.ok+=c.ok||0}}return r}
@@ -530,7 +554,7 @@ function finishWrong(){
   b.appendChild(r1);b.appendChild(r2);st.appendChild(b);
   fmtCoins();renderBadge();setTimeout(showRewards,300);
 }
-function renderVocab(){const body=$("vocabBody");body.innerHTML="";
+function renderVocab(){const body=$("vocabBody");body.innerHTML="";body.appendChild(el("div","study-note","☁️ 登录后错题与生词自动随账号同步，换设备不丢"));
   body.appendChild(el("h3","","📕 错题本（答错自动收录 · 连对2次移出）",0));
   let anyW=false;
   for(const l of Object.keys(CK)){const L=(S.wrong||{})[l]||{};const keys=Object.keys(L);if(!keys.length)continue;anyW=true;
@@ -582,7 +606,7 @@ $("backToLang").onclick=gotoLang;
 $("quitBtn").onclick=()=>{donePlay();renderChain()};
 document.querySelectorAll("#navTabs button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 $("resetBtn").onclick=async()=>{if(confirm("确定重置所有进度？")){localStorage.removeItem(SKEY);S=defaultState();save();if(DBUSER&&DB){try{await DB.from("progress").delete().eq("id",DBUSER.id)}catch(e){}}renderBadge();fmtCoins();gotoLang();toast("已重置")}};
-function showTab(t){document.querySelectorAll(".nav-tab button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));["home","stats","rewards","vocab","reset"].forEach(x=>$("tab-"+x).classList.toggle("hidden",x!==t));if(t==="stats")renderStats();if(t==="rewards")renderRewards();if(t==="vocab")renderVocab()}
+function showTab(t){document.querySelectorAll(".nav-tab button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));["home","stats","rewards","vocab","reset"].forEach(x=>$("tab-"+x).classList.toggle("hidden",x!==t));if(t==="stats")renderStats();if(t==="rewards")renderRewards();if(t==="vocab")renderVocab();if(t==="reset")updSyncStat()}
 async function init(){initClient();bindAuth();if(DB){try{const{data:{session}}=await DB.auth.getSession();await applySession(session);DB.auth.onAuthStateChange((ev,s)=>{if(ev==="SIGNED_IN"||ev==="USER_UPDATED")applySession(s);if(ev==="SIGNED_OUT")applySession(null)})}catch(e){}}fmtCoins();renderBadge();gotoLang();if("serviceWorker" in navigator){try{navigator.serviceWorker.register("sw.js")}catch(e){}}}
 document.addEventListener("DOMContentLoaded",init);
 </script>
