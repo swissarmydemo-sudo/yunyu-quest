@@ -1,0 +1,15 @@
+{
+  "name": "语之境界 · 先学后闯",
+  "short_name": "语之境界",
+  "description": "日语/韩语/法语/西语 四语闯关学习：一天一关，先学后闯，记忆曲线复习",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0d1f",
+  "theme_color": "#0a0d1f",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
