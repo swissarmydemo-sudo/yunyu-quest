@@ -240,7 +240,7 @@ html{color-scheme:light dark}
     <div class="row-between" style="gap:14px">
       <span class="coins">🪙 <span id="coinsVal">0</span></span>
       <div class="badge-line" id="badgeLine"></div>
-      <button class="btn ghost acct-btn" id="acctBtn">🔐 登 录</button>
+      <button class="btn ghost" id="themeBtn" title="主题">🌓</button><button class="btn ghost acct-btn" id="acctBtn">🔐 登 录</button>
     </div>
   </div>
   <div class="nav-tab" id="navTabs">
@@ -770,9 +770,9 @@ document.addEventListener("DOMContentLoaded",init);
   apply(resolve());
   try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(!saved())apply(sysDark()?'dark':'light');});}catch(e){}
   var order=['system','light','dark'];
-  var btn=document.createElement('button');
-  btn.id='themeBtn';btn.title='主题: 跟随系统';btn.style.cssText='position:fixed;z-index:99;right:12px;top:60px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:16px;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.25)';
-  btn.textContent='🌓';
+  var btn=document.getElementById('themeBtn'); var created=false;
+  if(!btn){btn=document.createElement('button');created=true;btn.id='themeBtn';btn.style.cssText='position:fixed;z-index:99;right:12px;top:60px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:16px;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.25)';}
+  btn.title='主题: 跟随系统'; btn.textContent='🌓';
   btn.onclick=function(){
     var s=saved();var i=order.indexOf(cur()==='system'?'system':s);
     var n=(i+1)%order.length;var t=order[n];
@@ -781,7 +781,7 @@ document.addEventListener("DOMContentLoaded",init);
     btn.textContent=(t==='system')?'🌓':(t==='light'?'☀️':'🌙');
     btn.title='主题: '+({system:'跟随系统',light:'浅色',dark:'深色'})[t];
   };
-  document.addEventListener('DOMContentLoaded',function(){document.body.appendChild(btn);
+  document.addEventListener('DOMContentLoaded',function(){if(created)document.body.appendChild(btn);
     var s=saved();btn.textContent=(s==='light')?'☀️':(s==='dark'?'🌙':'🌓');});
   window.__themeCurrent=cur;
 })();
