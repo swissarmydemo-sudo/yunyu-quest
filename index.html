@@ -773,13 +773,18 @@ document.addEventListener("DOMContentLoaded",init);
   var btn=document.getElementById('themeBtn'); var created=false;
   if(!btn){btn=document.createElement('button');created=true;btn.id='themeBtn';btn.style.cssText='position:fixed;z-index:99;right:12px;top:60px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--txt);font-size:16px;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.25)';}
   btn.title='主题: 跟随系统'; btn.textContent='🌓';
+  function visOf(m){return m==='system'?(sysDark()?'dark':'light'):m}
+  function setMode(m){try{localStorage.setItem(key,m)}catch(e){}
+    apply(visOf(m));
+    btn.textContent=(m==='system')?'🌓':(m==='light'?'☀️':'🌙');
+    btn.title='主题: '+({system:'跟随系统',light:'浅色',dark:'深色'})[m];
+  }
   btn.onclick=function(){
-    var s=saved();var i=order.indexOf(cur()==='system'?'system':s);
-    var n=(i+1)%order.length;var t=order[n];
-    try{localStorage.setItem(key,t)}catch(e){}
-    if(t==='system')apply(sysDark()?'dark':'light');else apply(t);
-    btn.textContent=(t==='system')?'🌓':(t==='light'?'☀️':'🌙');
-    btn.title='主题: '+({system:'跟随系统',light:'浅色',dark:'深色'})[t];
+    var modes=['system','light','dark'];
+    var start=modes.indexOf(saved()||'system'); if(start<0)start=0;
+    var prevVis=document.documentElement.dataset.theme;
+    for(var k=1;k<=modes.length;k++){var m=modes[(start+k)%modes.length];if(visOf(m)!==prevVis){setMode(m);return;}}
+    setMode(modes[(start+1)%modes.length]);
   };
   document.addEventListener('DOMContentLoaded',function(){if(created)document.body.appendChild(btn);
     var s=saved();btn.textContent=(s==='light')?'☀️':(s==='dark'?'🌙':'🌓');});
