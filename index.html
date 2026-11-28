@@ -74,7 +74,9 @@ h1 small{color:var(--dim);font-weight:400;letter-spacing:0;font-size:12px;displa
 .btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--dim)}
 .tts-btn{background:rgba(90,169,230,.08);border:1.5px solid rgba(90,169,230,.35);color:var(--accent);border-radius:50%;width:32px;height:32px;font-size:14px;cursor:pointer;flex:none;transition:background .15s,transform .12s;display:flex;align-items:center;justify-content:center}
 .tts-btn:active{background:rgba(90,169,230,.25);transform:scale(.92)}
-.study-item{display:flex;align-items:center;gap:10px 12px;padding:12px 14px;margin-bottom:8px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.045);border-left:3px solid var(--accent);border-radius:12px;flex-wrap:wrap;transition:background .15s,transform .15s,border-color .15s}
+.study-item{display:flex;align-items:center;gap:10px;padding:12px 14px;margin-bottom:8px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.045);border-left:3px solid var(--accent);border-radius:12px;flex-wrap:nowrap;transition:background .15s,transform .15s,border-color .15s}
+.si-body{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 12px}
+.si-acts{flex:0 0 auto;display:flex;gap:6px;align-items:center}
 .study-item:hover{background:rgba(255,255,255,.055);transform:translateX(2px)}
 .study-item:last-child{margin-bottom:0}
 .study-item .w{font-size:20px;font-weight:700;color:#fff;min-width:120px;flex:0 1 auto;word-break:keep-all;letter-spacing:.3px;line-height:1.35}
@@ -513,10 +515,13 @@ function renderChain(){
 }
 /* 学习词条行: 文本/读法/释义 + 🔊 + 🎤跟读 + ⭐收藏 */
 function studyRow(text,read,mean,lang){
-  const it=el("div","study-item",`<span class="w">${text}</span><span class="r">${read||""}</span><span class="m">${mean||""}</span>`);
-  const tt=el("button","tts-btn","🔊");tt.onclick=()=>speak(text,lang.voice);it.appendChild(tt);
-  if(SR_OK){const mc=el("button","tts-btn mic","🎤");mc.title="跟读评分";mc.onclick=()=>pronCheck(mc,text,lang.voice);it.appendChild(mc)}
-  const sb=el("button","tts-btn star"+(isStarred(VIEW.lang,text)?" on":""));sb.textContent=isStarred(VIEW.lang,text)?"⭐":"☆";sb.title="收藏到生词本";sb.onclick=()=>{toggleStar(VIEW.lang,text,read,mean);sb.textContent=isStarred(VIEW.lang,text)?"⭐":"☆";sb.classList.toggle("on",isStarred(VIEW.lang,text))};it.appendChild(sb);
+  const it=el("div","study-item");
+  const body=el("div","si-body",`<span class="w">${text}</span>${read?`<span class="r">${read}</span>`:""}<span class="m">${mean||""}</span>`);
+  it.appendChild(body);
+  const acts=el("div","si-acts");it.appendChild(acts);
+  const tt=el("button","tts-btn","🔊");tt.onclick=()=>speak(text,lang.voice);acts.appendChild(tt);
+  if(SR_OK){const mc=el("button","tts-btn mic","🎤");mc.title="跟读评分";mc.onclick=()=>pronCheck(mc,text,lang.voice);acts.appendChild(mc)}
+  const sb=el("button","tts-btn star"+(isStarred(VIEW.lang,text)?" on":""));sb.textContent=isStarred(VIEW.lang,text)?"⭐":"☆";sb.title="收藏到生词本";sb.onclick=()=>{toggleStar(VIEW.lang,text,read,mean);sb.textContent=isStarred(VIEW.lang,text)?"⭐":"☆";sb.classList.toggle("on",isStarred(VIEW.lang,text))};acts.appendChild(sb);
   return it;
 }
 function openLevel(d){
