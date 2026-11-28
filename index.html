@@ -426,30 +426,35 @@ let VIEW={lang:"ja"};let PLAY=null;let REWARDQ=[];
 function el(t,c,h){const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function pickN(a,n){const s=shuffle(a.slice());return s.slice(0,n)}
-/* TTS: cancel后延迟speak(Android坑) + voices加载 + 失败明确提示 */
+/* TTS: 优先在线发音(有道·四语真人音·不依赖设备语音包), 失败回退 Web Speech */
 var VOICES=[];function loadVoices(){try{VOICES=speechSynthesis.getVoices()||[]}catch(e){}}
 try{loadVoices();if(typeof speechSynthesis!=="undefined")speechSynthesis.onvoiceschanged=loadVoices}catch(e){}
-function speak(t,v){
+var TTS_BASE="https://dict.youdao.com/dictvoice";
+var LANG_LE={ja:"ja",ko:"ko",fr:"fr",es:"es",en:"en",zh:"zh"};
+var _AUDIO=null;
+function webSpeak(t,v){
   try{
-    if(typeof speechSynthesis==="undefined"){toast("⚠️ 当前浏览器不支持语音");return}
+    if(typeof speechSynthesis==="undefined")return;
     speechSynthesis.cancel();
     setTimeout(function(){
       try{
         var u=new SpeechSynthesisUtterance(t);u.lang=v;u.rate=0.8;
-        var vs=speechSynthesis.getVoices()||[];
-        var base=(v||"").split("-")[0];
+        var vs=speechSynthesis.getVoices()||[];var base=(v||"").split("-")[0];
         var m=vs.filter(function(x){return x.lang===v})[0]||vs.filter(function(x){return x.lang&&x.lang.indexOf(base)===0})[0];
-        if(m)u.voice=m;
-        u.onerror=function(e){toast("⚠️ 发音失败："+((e&&e.error)||"未知"))};
-        speechSynthesis.speak(u);
-        setTimeout(function(){
-          if(!speechSynthesis.speaking&&!speechSynthesis.pending){
-            toast("⚠️ 没有发出声音","设备可能未安装 "+(v||"")+" 语音包，可在系统设置→无障碍→文字转语音 中安装");
-          }
-        },800);
-      }catch(e){toast("⚠️ 发音异常")}
+        if(m)u.voice=m;speechSynthesis.speak(u);
+      }catch(e){}
     },80);
-  }catch(e){toast("⚠️ 发音异常")}
+  }catch(e){}
+}
+function speak(t,v){
+  if(!t)return;
+  var base=(v||"").split("-")[0];
+  var le=LANG_LE[base]||"en";
+  try{
+    if(_AUDIO){try{_AUDIO.pause();_AUDIO.currentTime=0}catch(e){}}
+    _AUDIO=new Audio(TTS_BASE+"?audio="+encodeURIComponent(t)+"&le="+le);
+    _AUDIO.play().catch(function(){ webSpeak(t,v); });
+  }catch(e){ webSpeak(t,v); }
 }
 function toast(m,s){const t=$("rewToast");t.innerHTML=`<div>${m}</div>${s?`<div style="font-weight:400;font-size:12px;margin-top:4px">${s}</div>`:""}`;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),3300)}
 function showRewards(){if(REWARDQ.length){const[m,s]=REWARDQ.shift();toast(m,s);setTimeout(showRewards,2500)}}
