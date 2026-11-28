@@ -72,12 +72,14 @@ h1 small{color:var(--dim);font-weight:400;letter-spacing:0;font-size:12px;displa
 .btn.primary{background:linear-gradient(135deg,#5aa9e6,#4361ee);color:#fff}
 .btn.gold{background:linear-gradient(135deg,#f4a261,#e76f51);color:#1b1030}
 .btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--dim)}
-.tts-btn{background:none;border:1.5px solid var(--accent);color:var(--accent);border-radius:50%;width:44px;height:44px;font-size:19px;cursor:pointer;flex:none}
-.study-item{display:flex;align-items:center;gap:10px 12px;padding:11px 6px;border-bottom:1px dashed var(--line);flex-wrap:wrap}
-.study-item:last-child{border-bottom:none}
-.study-item .w{font-size:19px;font-weight:700;min-width:120px;flex:0 1 auto;word-break:keep-all}
-.study-item .r{color:var(--accent);font-size:13px;min-width:70px;flex:0 1 auto;word-break:break-word}
-.study-item .m{color:var(--dim);font-size:14px;flex:1 1 100px;min-width:0;word-break:keep-all}
+.tts-btn{background:rgba(90,169,230,.08);border:1.5px solid rgba(90,169,230,.35);color:var(--accent);border-radius:50%;width:32px;height:32px;font-size:14px;cursor:pointer;flex:none;transition:background .15s,transform .12s;display:flex;align-items:center;justify-content:center}
+.tts-btn:active{background:rgba(90,169,230,.25);transform:scale(.92)}
+.study-item{display:flex;align-items:center;gap:10px 12px;padding:12px 14px;margin-bottom:8px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.045);border-left:3px solid var(--accent);border-radius:12px;flex-wrap:wrap;transition:background .15s,transform .15s,border-color .15s}
+.study-item:hover{background:rgba(255,255,255,.055);transform:translateX(2px)}
+.study-item:last-child{margin-bottom:0}
+.study-item .w{font-size:20px;font-weight:700;color:#fff;min-width:120px;flex:0 1 auto;word-break:keep-all;letter-spacing:.3px;line-height:1.35}
+.study-item .r{color:var(--accent);font-size:12.5px;min-width:70px;flex:0 1 auto;word-break:break-word;opacity:.85;line-height:1.4}
+.study-item .m{color:#b9c0dd;font-size:14px;flex:1 1 100px;min-width:0;word-break:keep-all;line-height:1.4}
 .study-sec{font-size:13px;color:var(--gold);font-weight:700;margin:14px 0 4px;letter-spacing:1px}
 .reward-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .reward-card{border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;background:#141832}
