@@ -426,7 +426,31 @@ let VIEW={lang:"ja"};let PLAY=null;let REWARDQ=[];
 function el(t,c,h){const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function pickN(a,n){const s=shuffle(a.slice());return s.slice(0,n)}
-function speak(t,v){try{const u=new SpeechSynthesisUtterance(t);u.lang=v;u.rate=0.8;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+/* TTS: cancel后延迟speak(Android坑) + voices加载 + 失败明确提示 */
+var VOICES=[];function loadVoices(){try{VOICES=speechSynthesis.getVoices()||[]}catch(e){}}
+try{loadVoices();if(typeof speechSynthesis!=="undefined")speechSynthesis.onvoiceschanged=loadVoices}catch(e){}
+function speak(t,v){
+  try{
+    if(typeof speechSynthesis==="undefined"){toast("⚠️ 当前浏览器不支持语音");return}
+    speechSynthesis.cancel();
+    setTimeout(function(){
+      try{
+        var u=new SpeechSynthesisUtterance(t);u.lang=v;u.rate=0.8;
+        var vs=speechSynthesis.getVoices()||[];
+        var base=(v||"").split("-")[0];
+        var m=vs.filter(function(x){return x.lang===v})[0]||vs.filter(function(x){return x.lang&&x.lang.indexOf(base)===0})[0];
+        if(m)u.voice=m;
+        u.onerror=function(e){toast("⚠️ 发音失败："+((e&&e.error)||"未知"))};
+        speechSynthesis.speak(u);
+        setTimeout(function(){
+          if(!speechSynthesis.speaking&&!speechSynthesis.pending){
+            toast("⚠️ 没有发出声音","设备可能未安装 "+(v||"")+" 语音包，可在系统设置→无障碍→文字转语音 中安装");
+          }
+        },800);
+      }catch(e){toast("⚠️ 发音异常")}
+    },80);
+  }catch(e){toast("⚠️ 发音异常")}
+}
 function toast(m,s){const t=$("rewToast");t.innerHTML=`<div>${m}</div>${s?`<div style="font-weight:400;font-size:12px;margin-top:4px">${s}</div>`:""}`;t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),3300)}
 function showRewards(){if(REWARDQ.length){const[m,s]=REWARDQ.shift();toast(m,s);setTimeout(showRewards,2500)}}
 function titleName(){const T=[["语言新手",0],["語の旅人",100],["双语行者",250],["境界突破者",500],["语之大师",800]];let n=T[0][0];for(const[a,p]of T)if(S.total>=p)n=a;return n}
