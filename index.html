@@ -80,7 +80,7 @@ h1 small{color:var(--dim);font-weight:400;letter-spacing:0;font-size:12px;displa
 .study-item .w{font-size:20px;font-weight:700;color:#fff;min-width:120px;flex:0 1 auto;word-break:keep-all;letter-spacing:.3px;line-height:1.35}
 .study-item .r{color:var(--accent);font-size:12.5px;min-width:70px;flex:0 1 auto;word-break:break-word;opacity:.85;line-height:1.4}
 .study-item .m{color:#b9c0dd;font-size:14px;flex:1 1 100px;min-width:0;word-break:keep-all;line-height:1.4}
-.study-sec{font-size:13px;color:var(--gold);font-weight:700;margin:14px 0 4px;letter-spacing:1px}
+.study-sec{font-size:12.5px;color:var(--gold);font-weight:700;margin:18px 0 8px;letter-spacing:1.2px;padding-left:10px;border-left:3px solid var(--gold);line-height:1.2}
 .reward-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .reward-card{border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;background:#141832}
 .reward-card.locked{opacity:.4}
@@ -427,8 +427,9 @@ function fmtCoins(){$("coinsVal").textContent=S.coins}
 function renderBadge(){let lv=passedCount("ja")+passedCount("ko")+passedCount("fr")+passedCount("es");$("badgeLine").innerHTML=`<span class="badge-chip">💠 ${titleName()}</span><span class="badge-chip">共过 ${lv} 课</span><span>🔥 ${S.streak}</span>`}
 
 /* ---------- 视图 ---------- */
-function gotoLang(){$("view-lang").classList.remove("hidden");$("view-chain").classList.add("hidden");const LB={ja:"日语",ko:"韩语",fr:"法语",es:"西班牙语"};document.querySelectorAll(".lang-card").forEach(c=>{const lg=c.dataset.lang;let last=0;for(const k in CK[lg].days){const n=+k;if(n>last)last=n}const sub=c.querySelector(".sub");if(sub)sub.textContent=`${LB[lg]} · 已过 ${passedCount(lg)}/${last} 课`})}
-function gotoChain(){$("view-lang").classList.add("hidden");$("view-chain").classList.remove("hidden");renderChain()}
+function gotoLang(){$("view-lang").classList.remove("hidden");$("view-chain").classList.add("hidden");document.documentElement.style.setProperty("--accent","#5aa9e6");const LB={ja:"日语",ko:"韩语",fr:"法语",es:"西班牙语"};document.querySelectorAll(".lang-card").forEach(c=>{const lg=c.dataset.lang;let last=0;for(const k in CK[lg].days){const n=+k;if(n>last)last=n}const sub=c.querySelector(".sub");if(sub)sub.textContent=`${LB[lg]} · 已过 ${passedCount(lg)}/${last} 课`})}
+function applyLangTheme(lang){const LC={ja:"#e63946",ko:"#c1121f",fr:"#6f9a37",es:"#e07a1f"};const c=LC[lang]||"#5aa9e6";document.documentElement.style.setProperty("--accent",c);document.documentElement.style.setProperty("--langColor",c)}
+function gotoChain(){$("view-lang").classList.add("hidden");$("view-chain").classList.remove("hidden");if(VIEW.lang)applyLangTheme(VIEW.lang);renderChain()}
 function renderChain(){
   const lang=CK[VIEW.lang];const card=$("chainCard");card.innerHTML="";
   /* 内容总天数 */
